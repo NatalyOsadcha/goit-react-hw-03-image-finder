@@ -1,28 +1,26 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react';
 import Searchbar from './Searchbar/Searchbar';
-import ImageGallery from './ImageGallery/ImageGallery'
-// import Api from './Api/Api';
+import ImageGallery from './ImageGallery/ImageGallery';
+import css from './App.module.css'
 
 export default class App extends Component {
   state = {
-    searchImage: '',
-    page: 1,
-  }
+    searchImage: ''
+  };
 
-  handleSearch = (image) => {
-    this.setState({ searchImage: image })
-  }
-
+  handleSearch = searchImage => {
+    this.setState({ searchImage });
+  };
   render() {
- return (
-    <div>
-     <Searchbar handleSearch={this.handleSearch} />
-     <ImageGallery searchImage={this.state.searchImage}/>
-      {/* <ImageGalleryItem/>
+    return (
+      <div className={css.app}>
+        <Searchbar onSubmit={this.handleSearch} />
+        <ImageGallery searchImage={this.state.searchImage} />
+        {/* <ImageGalleryItem/>
       <Loader />
       <Button/>
-      <Modal/> */} 
-    </div>
-  )
+      <Modal/> */}
+      </div>
+    );
   }
 }
