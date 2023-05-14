@@ -26,9 +26,12 @@ export default class ImageGallery extends Component {
     const nextPage = prevState.page;
     const prevImage = prevProps.searchImage;
     const nextImage = this.props.searchImage.trim();
-    if ( nextImage === '') {
+   
+    if (nextImage === '') {
+       console.log('yes')
       return this.setState({ hits: [], error: null });
     }
+
     if (prevImage !== nextImage && nextImage) {
       this.setState({ loading: true, hits: [], error: null });
       getSearchImage(nextImage, nextPage)
@@ -45,13 +48,15 @@ export default class ImageGallery extends Component {
         })
         .finally(() => this.setState({ loading: false }));
     }
-    if (prevPage !== nextPage) {
+    
+    if (this.state.page !== prevPage) {
+      
       this.setState({ loading: true });
       getSearchImage(nextImage, nextPage)
         .then(data => {
-          return this.setState({
-            hits: data.hits,
-          });
+    this.setState((prevState)=> ({
+            hits: [...prevState.hits, ...data.hits],
+          }));
         })
         .finally(() => this.setState({ loading: false }));
     }
@@ -81,5 +86,6 @@ ImageGallery.propTypes = {
   totalHits: PropTypes.number,
   loading: PropTypes.bool,
   error: PropTypes.string,
-  hits: PropTypes.arrayOf(PropTypes.object)
+  hits: PropTypes.arrayOf(PropTypes.object),
+  page: PropTypes.number,
 };
