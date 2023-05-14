@@ -58,7 +58,7 @@ export default class ImageGallery extends Component {
             ))}
           </ul>
         )}
-        
+        {console.log(totalHits)}
       </>
     );
   }
