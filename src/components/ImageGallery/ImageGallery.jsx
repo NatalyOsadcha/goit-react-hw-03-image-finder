@@ -3,53 +3,62 @@ import { getSearchImage } from 'components/Api/getSearchImage';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import { BallTriangle } from 'react-loader-spinner';
 import css from './ImageGallery.module.css';
+import Alert from '@mui/material/Alert';
 
 export default class ImageGallery extends Component {
   state = {
     hits: [],
     totalHits: null,
-    page: 1,
     loading: false,
-    error: '',
+    error: null,
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    const { page } = this.state;
+  componentDidUpdate(prevProps, prevState) {''
+    const prevPage = prevProps.page;
+    const nextPage = this.props.page;
     const prevImage = prevProps.searchImage;
     const nextImage = this.props.searchImage.trim();
-    if (prevImage !== nextImage && nextImage) {
-      this.setState({ loading: true });
-      getSearchImage(nextImage, page)
+    if (prevImage !== nextImage && nextImage ) {
+      this.setState({ loading: true, hits: [], error: null });
+      getSearchImage(nextImage, nextPage)
         .then(data => {
           if (data.hits && data.totalHits)
             return this.setState({
               hits: data.hits,
               totalHits: data.totalHits,
             });
-          return Promise.reject(data.message);
+          return Promise.reject(new Error ("Nothing found for your request"));
         })
         .catch(error => {
           this.setState({ error });
         })
         .finally(() => this.setState({ loading: false }));
     }
+    if (prevPage !== nextPage) {
+      this.setState({ loading: true });
+      getSearchImage(nextImage, nextPage)
+        .then(data => {
+            return this.setState({
+              hits: data.hits,
+            });
+        }).finally(() => this.setState({ loading: false }));
+    }
   }
 
   render() {
-    const { hits, loading, error } = this.state;
+    const { hits, loading, error, totalHits } = this.state;
     return (
       <>
-        {loading && <BallTriangle className={css.ballTriangle} />}
-        {error && <p>Server cannot process the request, repeat this request with modification. </p>}
-        {!this.props.searchImage && <p>Enter something for searching images</p>}
-        {hits.length>0 && (
+        {loading && <BallTriangle color="#4b5cdd"/>}
+        {error && <Alert severity="error">{error.message}</Alert>}
+        {hits && (
           <ul className={css.imageGallery}>
             {hits.map(hit => (
               <ImageGalleryItem hit={hit} />
             ))}
           </ul>
         )}
-        {!hits.length && <p>Nothing found for your request</p>}
+        
       </>
     );
   }

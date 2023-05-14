@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import css from './Searchbar.module.css';
-import {ReactComponent as GlassIcon} from '../../icons/glass.svg'
+import { ReactComponent as GlassIcon } from '../../icons/glass.svg'
+import { toast } from 'react-toastify';
 
 export default class Searchbar extends Component {
   handleSubmit = evt => {
     evt.preventDefault();
     const form = evt.currentTarget;
     const searchImage = form.elements.searchImage.value.toLowerCase();
+    if (searchImage.trim() === '') {
+      return toast ("Enter something for searching images")
+    }
+    console.log({ searchImage });
     this.props.onSubmit({ searchImage });
     form.reset();
   };
