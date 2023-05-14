@@ -16,20 +16,20 @@ export default class ImageGallery extends Component {
     page: 1,
   };
 
-   handleLoadMore = ({ page }) => {
-    this.setState({ page })
-    console.log(page)
-  }
+  handleLoadMore = ({ page }) => {
+    this.setState({ page });
+    console.log(page);
+  };
+
 
   componentDidUpdate(prevProps, prevState) {
     const prevPage = prevState.page;
     const nextPage = this.state.page;
     const prevImage = prevProps.searchImage;
     const nextImage = this.props.searchImage.trim();
-   
+
     if (nextImage === '') {
-       console.log('yes')
-      return this.setState({ hits: [], error: null });
+      this.setState({ hits: [], error: null });
     }
 
     if (prevImage !== nextImage && nextImage) {
@@ -48,13 +48,12 @@ export default class ImageGallery extends Component {
         })
         .finally(() => this.setState({ loading: false }));
     }
-    
-    if (this.state.page !== prevPage) {
-      
+
+    if (nextPage !== prevPage) {
       this.setState({ loading: true });
       getSearchImage(nextImage, nextPage)
         .then(data => {
-    this.setState((prevState)=> ({
+          this.setState(prevState => ({
             hits: [...prevState.hits, ...data.hits],
           }));
         })
@@ -62,14 +61,15 @@ export default class ImageGallery extends Component {
     }
   }
 
-
-
-// onFinalPage (totalHits) {
-// const finalPage = Math.ceil(Number(this.state.totalHits / 12));
-//   if (pageNum === finalPage) {
-//    loadMoreBtn.style.display = 'none';
-//   }
-// }
+  hideButton = () => {
+    const page = this.state.page;
+    const totalHits = this.state.totalHits;
+    const finalPage = Math.ceil(Number(this.state.totalHits / 12));
+    if (page === finalPage || totalHits < 13) {
+      return 'none'
+    }
+   return 'block' 
+  }
 
   render() {
     const { hits, loading, error, totalHits, page } = this.state;
@@ -84,7 +84,7 @@ export default class ImageGallery extends Component {
             ))}
           </ul>
         )}
-        {totalHits > 12 && <Button onClick={this.handleLoadMore} page={page} />}
+        {<Button onClick={this.handleLoadMore} page={page} hideButton={ this.hideButton} /> }
         {console.log(totalHits)}
       </>
     );

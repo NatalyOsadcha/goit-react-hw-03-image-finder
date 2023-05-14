@@ -14,6 +14,7 @@ export default class Button extends Component {
         type="button"
         className={css.buttonLoadMore}
         onClick={this.handlePage}
+        style={{ display: this.props.hideButton()}}
       >
         Load more
       </button>
