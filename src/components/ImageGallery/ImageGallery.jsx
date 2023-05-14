@@ -23,7 +23,7 @@ export default class ImageGallery extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const prevPage = prevState.page;
-    const nextPage = prevState.page;
+    const nextPage = this.state.page;
     const prevImage = prevProps.searchImage;
     const nextImage = this.props.searchImage.trim();
    
@@ -61,6 +61,15 @@ export default class ImageGallery extends Component {
         .finally(() => this.setState({ loading: false }));
     }
   }
+
+
+
+// onFinalPage (totalHits) {
+// const finalPage = Math.ceil(Number(this.state.totalHits / 12));
+//   if (pageNum === finalPage) {
+//    loadMoreBtn.style.display = 'none';
+//   }
+// }
 
   render() {
     const { hits, loading, error, totalHits, page } = this.state;
