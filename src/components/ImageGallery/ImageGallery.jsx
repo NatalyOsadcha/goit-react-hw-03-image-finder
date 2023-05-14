@@ -18,9 +18,7 @@ export default class ImageGallery extends Component {
 
   handleLoadMore = ({ page }) => {
     this.setState({ page });
-    console.log(page);
   };
-
 
   componentDidUpdate(prevProps, prevState) {
     const prevPage = prevState.page;
@@ -66,13 +64,13 @@ export default class ImageGallery extends Component {
     const totalHits = this.state.totalHits;
     const finalPage = Math.ceil(Number(this.state.totalHits / 12));
     if (page === finalPage || totalHits < 13) {
-      return 'none'
+      return 'none';
     }
-   return 'block' 
-  }
+    return 'block';
+  };
 
   render() {
-    const { hits, loading, error, totalHits, page } = this.state;
+    const { hits, loading, error, page} = this.state;
     return (
       <>
         {loading && <BallTriangle color="#4b5cdd" />}
@@ -84,8 +82,13 @@ export default class ImageGallery extends Component {
             ))}
           </ul>
         )}
-        {<Button onClick={this.handleLoadMore} page={page} hideButton={ this.hideButton} /> }
-        {console.log(totalHits)}
+        { 
+          <Button
+            onClick={this.handleLoadMore}
+            page={page}
+            hideButton={this.hideButton}
+          />
+        }
       </>
     );
   }

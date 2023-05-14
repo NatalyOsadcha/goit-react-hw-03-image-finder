@@ -16,7 +16,7 @@ export default class ImageGalleryItem extends Component {
     const { index, webformatURL, tags } = this.props.hit;
     return (
       <>
-        <li key={index+1} className={css.imageGalleryItemImage}>
+        <li key={index + 1} className={css.imageGalleryItemImage}>
           <img src={webformatURL} alt={tags} onClick={this.toggleModal} />
         </li>
         {this.state.showModal && (

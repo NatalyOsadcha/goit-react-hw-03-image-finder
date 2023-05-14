@@ -12,7 +12,6 @@ export default class Searchbar extends Component {
     if (searchImage.trim() === '') {
       return toast ("Enter something for searching images")
     }
-    console.log({ searchImage });
     this.props.onSubmit({ searchImage });
     form.reset();
   };

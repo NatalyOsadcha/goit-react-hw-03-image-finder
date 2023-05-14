@@ -14,15 +14,14 @@ export default class Button extends Component {
         type="button"
         className={css.buttonLoadMore}
         onClick={this.handlePage}
-        style={{ display: this.props.hideButton()}}
+        style={{ display: this.props.hideButton() }}
       >
         Load more
       </button>
     );
   }
-};
-
-Button.propTypes = {
-page: PropTypes.number.isRequired
 }
 
+Button.propTypes = {
+  page: PropTypes.number.isRequired,
+};
