@@ -4,6 +4,7 @@ import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import { BallTriangle } from 'react-loader-spinner';
 import css from './ImageGallery.module.css';
 import Alert from '@mui/material/Alert';
+import PropTypes from 'prop-types';
 
 export default class ImageGallery extends Component {
   state = {
@@ -13,12 +14,12 @@ export default class ImageGallery extends Component {
     error: null,
   };
 
-  componentDidUpdate(prevProps, prevState) {''
+  componentDidUpdate(prevProps, prevState) {
     const prevPage = prevProps.page;
     const nextPage = this.props.page;
     const prevImage = prevProps.searchImage;
     const nextImage = this.props.searchImage.trim();
-    if (prevImage !== nextImage && nextImage ) {
+    if (prevImage !== nextImage && nextImage) {
       this.setState({ loading: true, hits: [], error: null });
       getSearchImage(nextImage, nextPage)
         .then(data => {
@@ -27,7 +28,7 @@ export default class ImageGallery extends Component {
               hits: data.hits,
               totalHits: data.totalHits,
             });
-          return Promise.reject(new Error ("Nothing found for your request"));
+          return Promise.reject(new Error('Nothing found for your request'));
         })
         .catch(error => {
           this.setState({ error });
@@ -38,10 +39,11 @@ export default class ImageGallery extends Component {
       this.setState({ loading: true });
       getSearchImage(nextImage, nextPage)
         .then(data => {
-            return this.setState({
-              hits: data.hits,
-            });
-        }).finally(() => this.setState({ loading: false }));
+          return this.setState({
+            hits: data.hits,
+          });
+        })
+        .finally(() => this.setState({ loading: false }));
     }
   }
 
@@ -49,7 +51,7 @@ export default class ImageGallery extends Component {
     const { hits, loading, error, totalHits } = this.state;
     return (
       <>
-        {loading && <BallTriangle color="#4b5cdd"/>}
+        {loading && <BallTriangle color="#4b5cdd" />}
         {error && <Alert severity="error">{error.message}</Alert>}
         {hits && (
           <ul className={css.imageGallery}>
@@ -63,3 +65,10 @@ export default class ImageGallery extends Component {
     );
   }
 }
+
+ImageGallery.propTypes = {
+  totalHits: PropTypes.number,
+  loading: PropTypes.bool,
+  error: PropTypes.string,
+  hits: PropTypes.arrayOf(PropTypes.object)
+};
