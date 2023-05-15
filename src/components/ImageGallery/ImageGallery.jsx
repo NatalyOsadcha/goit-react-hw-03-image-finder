@@ -9,10 +9,10 @@ import PropTypes from 'prop-types';
 
 export default class ImageGallery extends Component {
   state = {
-    hits: [],
+    hits: null,
     totalHits: null,
     loading: false,
-    error: null,
+    error: '',
     page: 1,
   };
 
@@ -26,10 +26,6 @@ export default class ImageGallery extends Component {
     const prevImage = prevProps.searchImage;
     const nextImage = this.props.searchImage.trim();
 
-    if (nextImage === '') {
-      this.setState({ hits: [], error: null });
-    }
-
     if (prevImage !== nextImage && nextImage) {
       this.setState({ loading: true, hits: [], error: null });
       getSearchImage(nextImage, nextPage)
@@ -39,7 +35,7 @@ export default class ImageGallery extends Component {
               hits: data.hits,
               totalHits: data.totalHits,
             });
-          return Promise.reject(new Error('Nothing found for your request'));
+          return Promise.reject(data.message);
         })
         .catch(error => {
           this.setState({ error });
@@ -70,19 +66,22 @@ export default class ImageGallery extends Component {
   };
 
   render() {
-    const { hits, loading, error, page} = this.state;
+    // const nextImage = this.props.searchImage.trim();
+    const { hits, loading, error, page } = this.state;
     return (
       <>
         {loading && <BallTriangle color="#4b5cdd" />}
-        {error && <Alert severity="error">{error.message}</Alert>}
-        {hits && (
+        {error && (<Alert severity="error">Oops, something goes wrong</Alert>)}
+        {/* {nextImage === '' && (<Alert severity="warning">Enter something for searching images</Alert>)} */}
+        {hits && hits.length > 0 && (
           <ul className={css.imageGallery}>
             {hits.map(hit => (
               <ImageGalleryItem hit={hit} />
             ))}
           </ul>
         )}
-        { 
+        {hits && hits.length === 0 && (<Alert severity="warning">Nothing found for your request</Alert>)}
+        {
           <Button
             onClick={this.handleLoadMore}
             page={page}
